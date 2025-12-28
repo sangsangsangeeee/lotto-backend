@@ -61,13 +61,33 @@ export class LottoService {
        }
      `;
 
-      // ... (이후 코드는 동일)
       const result = await this.model.generateContent(prompt);
       const response = result.response;
-      let text = response.text();
-      text = text.replace(/```json|```/g, '').trim();
 
-      const apiResult = JSON.parse(text) as LottoResponse;
+      // 1. 전체 텍스트 가져오기
+      let text = response.text();
+
+      console.log('Raw Gemini Output:', text); // 디버깅용
+
+      // 2. [핵심 수정] JSON 부분만 추출하기 (Regex 또는 인덱스 활용)
+      // 첫 번째 '{' 부터 마지막 '}' 까지 자릅니다.
+      const jsonStartIndex = text.indexOf('{');
+      const jsonEndIndex = text.lastIndexOf('}') + 1;
+
+      if (jsonStartIndex !== -1 && jsonEndIndex !== -1) {
+        text = text.substring(jsonStartIndex, jsonEndIndex);
+      } else {
+        // JSON 형태를 찾지 못했을 경우
+        throw new InternalServerErrorException(
+          'Gemini가 올바른 JSON을 반환하지 않았습니다.',
+        );
+      }
+
+      // 3. 파싱
+      const apiResult = JSON.parse(text) as {
+        report: string;
+        combinations: LottoCombination[];
+      };
 
       return {
         ...apiResult,

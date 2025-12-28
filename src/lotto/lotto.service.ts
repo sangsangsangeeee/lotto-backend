@@ -2,10 +2,14 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
+export interface LottoCombination {
+  numbers: number[];
+  theme: string;
+}
 
 export interface LottoResponse {
   report: string;
-  combinations: number[][];
+  combinations: LottoCombination[];
 }
 
 @Injectable()
@@ -48,8 +52,8 @@ export class LottoService {
         {
           "report": "여기에 분석 리포트 내용을 적어줘",
           "combinations": [
-            [1, 2, 3, 4, 5, 6],
-            [7, 8, 9, 10, 11, 12]
+            { "numbers": [1, 2, 3, 4, 5, 6], "theme": "균형 잡힌 조합" },
+            { "numbers": [7, 8, 9, 10, 11, 12], "theme": "미출현 번호 위주" }
           ]
         }
       `;

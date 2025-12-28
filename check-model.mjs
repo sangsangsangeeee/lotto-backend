@@ -1,7 +1,7 @@
 // Node.js 18 이상에서는 fetch가 내장되어 있습니다.
 // 만약 Node 버전이 낮아 fetch 에러가 난다면 'axios'를 사용하거나 node 버전을 확인해주세요.
 
-const apiKey = 'AIzaSyAwepIZlFOd17SCj-ZBUuZ7azuxyI4vUI8'; // 여기에 API 키를 넣어주세요
+const apiKey = process.env.GEMINI_API_KEY; // 여기에 API 키를 넣어주세요
 const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`;
 
 async function checkAvailableModels() {
